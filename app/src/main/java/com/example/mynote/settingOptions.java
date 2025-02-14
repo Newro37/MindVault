@@ -93,6 +93,7 @@ public class settingOptions extends AppCompatActivity {
                 break;
             default:
                 setTheme(R.style.Theme_MyNote);
+                break;
         }
     }
 }
