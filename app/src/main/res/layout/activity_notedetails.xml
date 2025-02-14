@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".notedetails">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarofnotedetail"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_marginTop="30dp"
+        android:background="?attr/colorPrimary"
+        android:paddingTop="5dp" />
+
+
+    <TextView
+        android:id="@+id/titleofnotedetail"
+        android:paddingLeft="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/toolbarofnotedetail"
+        android:layout_marginTop="20dp"
+        android:background="@android:color/white"
+        android:importantForAutofill="yes"
+        android:inputType="textCapSentences"
+        android:minHeight="48dp"
+        android:textColor="@android:color/black"
+        android:textColorHint="@android:color/black"
+        android:textSize="25sp"
+        android:textStyle="bold" />
+
+
+    <TextView
+        android:id="@+id/contentofnotedetail"
+        android:paddingLeft="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/titleofnotedetail"
+        android:layout_marginTop="10dp"
+        android:background="@android:color/white"
+        android:gravity="top|start"
+        android:importantForAutofill="yes"
+        android:inputType="textMultiLine"
+        android:minHeight="48dp"
+        android:padding="5dp"
+        android:textColor="@android:color/black"
+        android:textColorHint="@android:color/black"
+        android:textSize="20sp" />
+
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/gotoeditnote"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="15dp"
+        android:layout_marginBottom="15dp"
+        android:contentDescription="edit_note"
+        android:src="@drawable/baseline_edit_24"
+        app:backgroundTint="@color/colorPrimaryDark"
+        app:borderWidth="0dp"
+        app:elevation="6dp"
+        app:rippleColor="@color/colorAccent" />
+
+</RelativeLayout>

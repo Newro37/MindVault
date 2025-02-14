@@ -5,23 +5,7 @@
 
 
         <item
-            android:id="@+id/notes"
-            android:icon="@drawable/baseline_lightbulb_outline_24"
-            android:title="Notes" />
-
-        <item
-            android:id="@+id/trash"
-            android:icon="@drawable/baseline_restore_from_trash_24"
-            android:title="Trash" />
-
-        <item
-            android:id="@+id/settings"
-            android:icon="@drawable/baseline_settings_24"
-            android:title="Settings" />
-
-        <item
             android:id="@+id/logout"
-            android:icon="@drawable/baseline_logout_24"
             android:title="Logout" />
 
 

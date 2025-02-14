@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">MindVault</string>
-        <string name="settings">Settings</string>
-        <string name="change_theme">Change Theme</string>
-        <string name="system_default">System Default</string>
-        <string name="sort_newest_first">Sort Newest First</string>
-    </resources>
+    <string name="settings">Settings</string>
+    <string name="change_theme">Change Theme</string>
+    <string name="system_default">System Default</string>
+    <string name="sort_newest_first">Sort Newest First</string>
+</resources>
 

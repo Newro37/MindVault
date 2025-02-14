@@ -41,8 +41,7 @@
             android:text="MindVault"
             android:textColor="#000000"
             android:textSize="28sp"
-            android:textStyle="bold"
-            />
+            android:textStyle="bold" />
 
     </LinearLayout>
 
@@ -101,17 +100,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+        android:gravity="center"
         android:text="Forgot password?"
         android:textColor="#FFC107"
         android:textSize="16sp"
-        android:gravity="center"
 
         />
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal" >
+        android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
@@ -135,13 +134,13 @@
             />
 
     </LinearLayout>
+
     <ProgressBar
         android:id="@+id/loginprogressid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:visibility="gone"/>
-
+        android:visibility="gone" />
 
 
 </LinearLayout>

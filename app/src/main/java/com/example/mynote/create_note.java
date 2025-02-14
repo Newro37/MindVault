@@ -2,6 +2,7 @@ package com.example.mynote;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -101,5 +102,13 @@ public class create_note extends AppCompatActivity implements View.OnClickListen
                 Toast.makeText(getApplicationContext(), "Failed to create note", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item){
+        if(item.getItemId()==android.R.id.home){
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
