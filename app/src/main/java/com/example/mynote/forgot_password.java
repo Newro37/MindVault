@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -85,5 +87,14 @@ public class forgot_password extends AppCompatActivity implements View.OnClickLi
         Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT);
         toast.setGravity(Gravity.BOTTOM, 0, 100);
         toast.show();
+    }
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        View view = getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+        return super.dispatchTouchEvent(ev);
     }
 }

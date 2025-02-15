@@ -40,7 +40,7 @@
         android:layout_height="match_parent"
         android:layout_below="@id/titleofnotedetail"
         android:layout_marginTop="10dp"
-        android:background="@android:color/white"
+        android:background="@color/ic_launcher_background"
         android:gravity="top|start"
         android:importantForAutofill="yes"
         android:inputType="textMultiLine"

@@ -2,7 +2,9 @@ package com.example.mynote;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
@@ -144,5 +146,14 @@ public class sign_up extends AppCompatActivity implements View.OnClickListener {
         // Move cursor to the end of the text
         mSignUpPassword.setSelection(mSignUpPassword.getText().length());
         mConfirmPassword.setSelection(mConfirmPassword.getText().length());
+    }
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        View view = getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+        return super.dispatchTouchEvent(ev);
     }
 }

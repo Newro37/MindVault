@@ -3,7 +3,9 @@ package com.example.mynote;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import androidx.appcompat.widget.Toolbar;
 
@@ -64,5 +66,13 @@ public class notedetails extends AppCompatActivity implements View.OnClickListen
         }
         return super.onOptionsItemSelected(item);
     }
-
+    @Override
+    public boolean dispatchTouchEvent(MotionEvent ev) {
+        View view = getCurrentFocus();
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        }
+        return super.dispatchTouchEvent(ev);
+    }
 }
