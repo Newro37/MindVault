@@ -130,6 +130,7 @@ public class notes_page extends AppCompatActivity implements View.OnClickListene
                             @Override
                             public boolean onMenuItemClick(@NonNull MenuItem item) {
                                 shareNote(model.getTitle(), model.getContent());
+                                Toast.makeText(v.getContext(),"Note shared successfully",Toast.LENGTH_SHORT).show();
                                 return false;
                             }
                         });
