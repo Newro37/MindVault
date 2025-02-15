@@ -9,66 +9,62 @@
     android:padding="24dp"
     tools:context=".MainActivity">
 
+    <!-- Logo Image -->
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:layout_height="160dp"
         android:layout_gravity="center"
-        android:src="@drawable/icon"
+        android:src="@drawable/icon"/>
 
-        />
-
+    <!-- Welcome Text -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:gravity="center"
             android:text="Welcome to "
             android:textColor="#000000"
-            android:textSize="28sp"
-
-            />
+            android:textSize="28sp"/>
 
         <TextView
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="5dp"
             android:gravity="center"
             android:text="MindVault"
             android:textColor="#000000"
             android:textSize="28sp"
-            android:textStyle="bold" />
-
+            android:textStyle="bold"/>
     </LinearLayout>
 
+    <!-- Tagline -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:gravity="center"
-        android:text="Write once,remember always"
+        android:text="Write once, remember always"
         android:textColor="#7A7A7A"
-        android:textSize="16sp"
+        android:textSize="16sp"/>
 
-        />
-
+    <!-- Email Input -->
     <EditText
         android:id="@+id/loginemailid"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        android:hint="Email address"
+        android:hint="Email"
         android:inputType="textEmailAddress"
         android:padding="15dp"
         android:textColor="#000000"
-        android:textColorHint="#7A7A7A"
+        android:textColorHint="#7A7A7A"/>
 
-        />
-
+    <!-- Password Input -->
     <EditText
         android:id="@+id/loginpasswordid"
         android:layout_width="match_parent"
@@ -78,10 +74,33 @@
         android:inputType="textPassword"
         android:padding="15dp"
         android:textColor="#000000"
-        android:textColorHint="#7A7A7A"
+        android:textColorHint="#7A7A7A"/>
 
-        />
+    <!-- Show Password Checkbox -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal">
 
+        <CheckBox
+            android:id="@+id/showPasswordCheckbox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Show Password"
+            android:textColor="#000000"/>
+
+        <TextView
+            android:id="@+id/showPasswordText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text=""
+            android:textColor="#7A7A7A"
+            android:textSize="14sp"/>
+    </LinearLayout>
+
+    <!-- Login Button -->
     <Button
         android:id="@+id/loginloginid"
         android:layout_width="match_parent"
@@ -91,10 +110,9 @@
         android:text="LOGIN"
         android:textColor="#180B0B"
         android:textSize="18sp"
-        android:textStyle="bold"
+        android:textStyle="bold"/>
 
-        />
-
+    <!-- Forgot Password -->
     <TextView
         android:id="@+id/loginforgotpasswordid"
         android:layout_width="wrap_content"
@@ -103,44 +121,38 @@
         android:gravity="center"
         android:text="Forgot password?"
         android:textColor="#FFC107"
-        android:textSize="16sp"
+        android:textSize="16sp"/>
 
-        />
-
+    <!-- Register Prompt -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="85dp"
             android:text="Don't have an account?"
+            android:layout_marginTop="65dp"
             android:textColor="#0D0C0B"
-            android:textSize="14sp"
-
-            />
+            android:textSize="14sp"/>
 
         <TextView
             android:id="@+id/loginregisterid"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="85dp"
+            android:layout_marginTop="65dp"
             android:text="  Register!"
             android:textColor="#FFC107"
-            android:textSize="14sp"
-
-            />
-
+            android:textSize="14sp"/>
     </LinearLayout>
 
+    <!-- Progress Bar -->
     <ProgressBar
         android:id="@+id/loginprogressid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:visibility="gone" />
-
-
+        android:visibility="gone"/>
 </LinearLayout>

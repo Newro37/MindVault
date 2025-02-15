@@ -2,132 +2,147 @@ package com.example.mynote;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Patterns;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class sign_up extends AppCompatActivity implements View.OnClickListener {
 
-    private EditText msignupemail, msignuppassword, msignupname;
-    private Button msignupbutton;
-    private TextView msignuplogin;
-    private ProgressBar msignupprogressbar;
-
-    private FirebaseAuth firebaseAuth;
+    private EditText mSignUpEmail, mSignUpPassword, mConfirmPassword;
+    private CheckBox mShowPasswordCheckbox;
+    private TextView mShowPasswordText, mLoginPrompt, mPasswordError;
+    private Button mSignUpButton;
+    private ProgressBar mProgressBar;
+    private FirebaseAuth mFirebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().hide();
-        }
+        // Initialize views
+        mSignUpEmail = findViewById(R.id.signupemail);
+        mSignUpPassword = findViewById(R.id.signuppassword);
+        mConfirmPassword = findViewById(R.id.confirmpassword);
+        mShowPasswordCheckbox = findViewById(R.id.showPasswordCheckbox);
+        mShowPasswordText = findViewById(R.id.showPasswordText);
+        mSignUpButton = findViewById(R.id.signupbutton);
+        mLoginPrompt = findViewById(R.id.signuplogin);
+        mProgressBar = findViewById(R.id.signupprogressbar);
+        mPasswordError = findViewById(R.id.passwordError);
 
-        msignuplogin = findViewById(R.id.signuplogin);
-        msignuplogin.setOnClickListener(this);
+        // Set click listeners
+        mSignUpButton.setOnClickListener(this);
+        mLoginPrompt.setOnClickListener(this);
+        mShowPasswordCheckbox.setOnClickListener(this);
+        mShowPasswordText.setOnClickListener(this);
 
-        msignupbutton = findViewById(R.id.signupbutton);
-        msignupbutton.setOnClickListener(this);
-
-        msignupemail = findViewById(R.id.signupemail);
-        msignuppassword = findViewById(R.id.signuppassword);
-        msignupprogressbar = findViewById(R.id.signupprogressbar);
-
-        firebaseAuth = FirebaseAuth.getInstance();
+        // Initialize Firebase Auth
+        mFirebaseAuth = FirebaseAuth.getInstance();
     }
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.signuplogin) {
-            Intent intent = new Intent(sign_up.this, MainActivity.class);
-            startActivity(intent);
-        }
-
-        if (v.getId() == R.id.signupbutton) {
-            String mail = msignupemail.getText().toString().trim();
-            String pass = msignuppassword.getText().toString().trim();
-
-            if (mail.isEmpty()) {
-                msignupemail.setError("Enter an email address");
-                msignupemail.requestFocus();
-                return;
-            } else if (!Patterns.EMAIL_ADDRESS.matcher(mail).matches()) {
-                msignupemail.setError("Enter a valid email address");
-                msignupemail.requestFocus();
-                return;
-            } else if (pass.isEmpty()) {
-                msignuppassword.setError("Enter password");
-                msignuppassword.requestFocus();
-                return;
-            } else if (pass.length() < 8) {
-                msignuppassword.setError("Password should contain at least 8 characters");
-                msignuppassword.requestFocus();
-                return;
-            } else {
-                msignupprogressbar.setVisibility(View.VISIBLE);
-
-                firebaseAuth.createUserWithEmailAndPassword(mail, pass).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        msignupprogressbar.setVisibility(View.GONE);
-
-                        if (task.isSuccessful()) {
-                            Toast toast = Toast.makeText(getApplicationContext(), "Registration successful", Toast.LENGTH_SHORT);
-                            toast.setGravity(Gravity.BOTTOM, 0, 100);
-                            toast.show();
-
-                            sendEmailVerification();
-                        } else {
-                            Toast toast = Toast.makeText(getApplicationContext(), "Failed to register", Toast.LENGTH_SHORT);
-                            toast.setGravity(Gravity.BOTTOM, 0, 100);
-                            toast.show();
-                        }
-                    }
-                });
-            }
+        int id = v.getId();
+        if (id == R.id.signupbutton) {
+            handleSignUp();
+        } else if (id == R.id.signuplogin) {
+            startActivity(new Intent(this, MainActivity.class));
+            finish();
+        } else if (id == R.id.showPasswordCheckbox || id == R.id.showPasswordText) {
+            togglePasswordVisibility();
         }
     }
 
-    private void sendEmailVerification() {
-        FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+    private void handleSignUp() {
+        String email = mSignUpEmail.getText().toString().trim();
+        String password = mSignUpPassword.getText().toString().trim();
+        String confirmPassword = mConfirmPassword.getText().toString().trim();
 
-        if (firebaseUser != null) {
-            firebaseUser.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    if (task.isSuccessful()) {
-                        Toast toast = Toast.makeText(getApplicationContext(), "Verification email sent", Toast.LENGTH_SHORT);
-                        toast.setGravity(Gravity.BOTTOM, 0, 100);
-                        toast.show();
-                        firebaseAuth.signOut();
-                        finish();
-                        startActivity(new Intent(sign_up.this, MainActivity.class));
-                    } else {
-                        Toast toast = Toast.makeText(getApplicationContext(), "Failed to send verification email", Toast.LENGTH_SHORT);
-                        toast.setGravity(Gravity.BOTTOM, 0, 100);
-                        toast.show();
-                    }
-                }
-            });
-        } else {
-            Toast toast = Toast.makeText(getApplicationContext(), "Failed to send verification email", Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.BOTTOM, 0, 100);
-            toast.show();
+        // Validate inputs
+        if (email.isEmpty()) {
+            mSignUpEmail.setError("Email is required");
+            mSignUpEmail.requestFocus();
+            return;
         }
+
+        if (password.isEmpty()) {
+            mSignUpPassword.setError("Password is required");
+            mSignUpPassword.requestFocus();
+            return;
+        }
+
+        if (confirmPassword.isEmpty()) {
+            mConfirmPassword.setError("Confirm password is required");
+            mConfirmPassword.requestFocus();
+            return;
+        }
+
+        if (!password.equals(confirmPassword)) {
+            mPasswordError.setVisibility(View.VISIBLE);
+            mPasswordError.setText("Passwords do not match");
+            return;
+        } else {
+            mPasswordError.setVisibility(View.GONE);
+        }
+
+        if (password.length() < 8) {
+            mSignUpPassword.setError("Password must be at least 8 characters");
+            mSignUpPassword.requestFocus();
+            return;
+        }
+
+        // Show progress bar and disable button
+        mProgressBar.setVisibility(View.VISIBLE);
+        mSignUpButton.setEnabled(false);
+
+        // Create user with Firebase
+        mFirebaseAuth.createUserWithEmailAndPassword(email, password)
+                .addOnCompleteListener(task -> {
+                    mProgressBar.setVisibility(View.GONE);
+                    mSignUpButton.setEnabled(true);
+
+                    if (task.isSuccessful()) {
+                        sendEmailVerification();
+                    } else {
+                        Toast.makeText(this, "Sign up failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void sendEmailVerification() {
+        FirebaseUser user = mFirebaseAuth.getCurrentUser();
+        if (user != null) {
+            user.sendEmailVerification()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(this, "Verification email sent to " + user.getEmail(), Toast.LENGTH_SHORT).show();
+                            startActivity(new Intent(this, MainActivity.class));
+                            finish();
+                        } else {
+                            Toast.makeText(this, "Failed to send verification email", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        }
+    }
+
+    private void togglePasswordVisibility() {
+        if (mShowPasswordCheckbox.isChecked()) {
+            mSignUpPassword.setInputType(android.text.InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+            mConfirmPassword.setInputType(android.text.InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
+        } else {
+            mSignUpPassword.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD);
+            mConfirmPassword.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        }
+        // Move cursor to the end of the text
+        mSignUpPassword.setSelection(mSignUpPassword.getText().length());
+        mConfirmPassword.setSelection(mConfirmPassword.getText().length());
     }
 }
