@@ -126,6 +126,13 @@ public class notes_page extends AppCompatActivity implements View.OnClickListene
                                 return false;
                             }
                         });
+                        popupmenu.getMenu().add("Share").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                            @Override
+                            public boolean onMenuItemClick(@NonNull MenuItem item) {
+                                shareNote(model.getTitle(), model.getContent());
+                                return false;
+                            }
+                        });
                         popupmenu.getMenu().add("Delete").setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                             @Override
                             public boolean onMenuItemClick(@NonNull MenuItem item) {
@@ -155,6 +162,7 @@ public class notes_page extends AppCompatActivity implements View.OnClickListene
                         popupmenu.show();
                     }
                 });
+
 
 
                 holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -267,6 +275,15 @@ public class notes_page extends AppCompatActivity implements View.OnClickListene
         int number=random.nextInt(colorcode.size());
         return colorcode.get(number);
     }
+    private void shareNote(String title, String content) {
+        Intent shareIntent = new Intent(Intent.ACTION_SEND);
+        shareIntent.setType("text/plain");
+        shareIntent.putExtra(Intent.EXTRA_SUBJECT, "Note: " + title);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, content);
+
+        startActivity(Intent.createChooser(shareIntent, "Share Note via"));
+    }
+
 
 }
 
