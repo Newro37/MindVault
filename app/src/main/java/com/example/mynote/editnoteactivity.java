@@ -9,10 +9,13 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
-import androidx.annotation.NonNull;
-import androidx.appcompat.widget.Toolbar;
+
 import androidx.activity.EdgeToEdge;
+import androidx.activity.OnBackPressedCallback;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -21,6 +24,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.HashMap;
 
 public class editnoteactivity extends AppCompatActivity implements View.OnClickListener {
@@ -71,12 +75,22 @@ public class editnoteactivity extends AppCompatActivity implements View.OnClickL
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             }
 
+            toolbar.setNavigationOnClickListener(v -> navigateToNotesPage());
+
             msaveeditnote.setOnClickListener(this);
 
             String notetitle = data.getStringExtra("title");
             String notecontent = data.getStringExtra("content");
             medittitleofnote.setText(notetitle);
             meditcontentofnote.setText(notecontent);
+
+            // ✅ Back button handling using OnBackPressedDispatcher
+            getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+                @Override
+                public void handleOnBackPressed() {
+                    navigateToNotesPage();
+                }
+            });
 
             Log.d(TAG, "EditNoteActivity initialized for note ID: " + data.getStringExtra("noteid"));
         } catch (Exception e) {
@@ -124,7 +138,7 @@ public class editnoteactivity extends AppCompatActivity implements View.OnClickL
                 note.put("title", newtitle);
                 note.put("content", newcontent);
                 note.put("editTime", FieldValue.serverTimestamp());
-                note.put("colorIndex", originalColorIndex); // Preserve original color
+                note.put("colorIndex", originalColorIndex);
 
                 Log.i(TAG, "Attempting to update note: " + noteId);
                 documentReference.set(note)

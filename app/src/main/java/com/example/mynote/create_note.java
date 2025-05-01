@@ -9,10 +9,13 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.Toolbar;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -21,6 +24,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.HashMap;
 import java.util.Random;
 
@@ -63,7 +67,17 @@ public class create_note extends AppCompatActivity implements View.OnClickListen
             }
 
             msavenote.setOnClickListener(this);
+
+            // ✅ Modern back press handling
+            getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+                @Override
+                public void handleOnBackPressed() {
+                    navigateToNotesPage();
+                }
+            });
+
             Log.d(TAG, "CreateNoteActivity initialized");
+
         } catch (Exception e) {
             handleError(e, "Failed to initialize activity");
         }
@@ -95,7 +109,6 @@ public class create_note extends AppCompatActivity implements View.OnClickListen
                         .collection("myNotes")
                         .document();
 
-                // Generate random color index (0-9)
                 int colorIndex = random.nextInt(10);
 
                 HashMap<String, Object> note = new HashMap<>();

@@ -44,7 +44,6 @@ public class notedetails extends AppCompatActivity implements View.OnClickListen
             EdgeToEdge.enable(this);
             setContentView(R.layout.activity_notedetails);
 
-            // Initialize views with null checks
             Toolbar toolbar = findViewById(R.id.toolbarofnotedetail);
             if (toolbar == null) throw new RuntimeException("Toolbar not found");
             setSupportActionBar(toolbar);
@@ -66,7 +65,6 @@ public class notedetails extends AppCompatActivity implements View.OnClickListen
                 throw new IllegalStateException("No intent data available");
             }
 
-            // Set note content with enhanced null safety
             String title = data.getStringExtra("title");
             String content = data.getStringExtra("content");
 
@@ -77,7 +75,6 @@ public class notedetails extends AppCompatActivity implements View.OnClickListen
                 mcontentofnotedetail.setText(content != null ? content : "");
             }
 
-            // Set background color with validation
             int colorIndex = data.getIntExtra("colorIndex", 0);
             setNoteBackgroundColor(colorIndex);
 
@@ -150,20 +147,20 @@ public class notedetails extends AppCompatActivity implements View.OnClickListen
             Intent intent = new Intent(this, notes_page.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
+            finish();
         } catch (Exception e) {
             handleError(e, "Failed to navigate to notes page");
         }
     }
 
-   /* @Override
+    @Override
     public void onBackPressed() {
         try {
-            super.onBackPressed();
-            // finish();
+            navigateToNotesPage();
         } catch (Exception e) {
             handleError(e, "Failed to handle back press");
         }
-    }*/
+    }
 
     private void handleError(Exception e, String userMessage) {
         try {
