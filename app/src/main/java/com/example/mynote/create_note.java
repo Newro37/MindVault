@@ -22,6 +22,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
+import java.util.Random;
 
 public class create_note extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "CreateNoteActivity";
@@ -30,6 +31,7 @@ public class create_note extends AppCompatActivity implements View.OnClickListen
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private FirebaseFirestore firebaseFirestore;
+    private Random random = new Random();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,10 +94,15 @@ public class create_note extends AppCompatActivity implements View.OnClickListen
                         .document(firebaseUser.getUid())
                         .collection("myNotes")
                         .document();
+
+                // Generate random color index (0-9)
+                int colorIndex = random.nextInt(10);
+
                 HashMap<String, Object> note = new HashMap<>();
                 note.put("title", title);
                 note.put("content", content);
                 note.put("editTime", FieldValue.serverTimestamp());
+                note.put("colorIndex", colorIndex);
 
                 Log.i(TAG, "Attempting to save note: " + title);
                 documentReference.set(note)

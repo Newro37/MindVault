@@ -2,76 +2,188 @@ package com.example.mynote;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import androidx.appcompat.widget.Toolbar;
-
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-
+import androidx.core.content.ContextCompat;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class notedetails extends AppCompatActivity implements View.OnClickListener {
+    private static final String TAG = "NoteDetailsActivity";
     private TextView mtitleofnotedetail, mcontentofnotedetail;
-    FloatingActionButton mgotoeditnote;
+    private FloatingActionButton mgotoeditnote;
     private Intent data;
+    private RelativeLayout noteDetailContainer;
+
+    private final int[] COLOR_RESOURCES = {
+            R.color.color1,
+            R.color.color2,
+            R.color.color3,
+            R.color.color4,
+            R.color.color5,
+            R.color.color6,
+            R.color.color7,
+            R.color.color8,
+            R.color.color9,
+            R.color.color10
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_notedetails);
+        try {
+            EdgeToEdge.enable(this);
+            setContentView(R.layout.activity_notedetails);
 
-        Toolbar toolbar = findViewById(R.id.toolbarofnotedetail);
-        setSupportActionBar(toolbar);
+            // Initialize views with null checks
+            Toolbar toolbar = findViewById(R.id.toolbarofnotedetail);
+            if (toolbar == null) throw new RuntimeException("Toolbar not found");
+            setSupportActionBar(toolbar);
 
-        if (getSupportActionBar() != null) {
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            noteDetailContainer = findViewById(R.id.noteDetailContainer);
+            if (noteDetailContainer == null) throw new RuntimeException("Note container not found");
+
+            mtitleofnotedetail = findViewById(R.id.titleofnotedetail);
+            mcontentofnotedetail = findViewById(R.id.contentofnotedetail);
+            mgotoeditnote = findViewById(R.id.gotoeditnote);
+
+            if (getSupportActionBar() != null) {
+                getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+                getSupportActionBar().setDisplayShowHomeEnabled(true);
+            }
+
+            data = getIntent();
+            if (data == null) {
+                throw new IllegalStateException("No intent data available");
+            }
+
+            // Set note content with enhanced null safety
+            String title = data.getStringExtra("title");
+            String content = data.getStringExtra("content");
+
+            if (mtitleofnotedetail != null) {
+                mtitleofnotedetail.setText(title != null ? title : "");
+            }
+            if (mcontentofnotedetail != null) {
+                mcontentofnotedetail.setText(content != null ? content : "");
+            }
+
+            // Set background color with validation
+            int colorIndex = data.getIntExtra("colorIndex", 0);
+            setNoteBackgroundColor(colorIndex);
+
+            if (mgotoeditnote != null) {
+                mgotoeditnote.setOnClickListener(this);
+            }
+
+        } catch (Exception e) {
+            handleError(e, "Failed to initialize activity");
+            finish();
         }
+    }
 
-        mtitleofnotedetail = findViewById(R.id.titleofnotedetail);
-        mcontentofnotedetail = findViewById(R.id.contentofnotedetail);
-        mgotoeditnote = findViewById(R.id.gotoeditnote);
+    private void setNoteBackgroundColor(int colorIndex) {
+        try {
+            if (COLOR_RESOURCES.length == 0) {
+                throw new IllegalStateException("No color resources available");
+            }
 
-        data = getIntent();
+            if (colorIndex < 0 || colorIndex >= COLOR_RESOURCES.length) {
+                colorIndex = 0;
+                Log.w(TAG, "Invalid color index, using default");
+            }
 
-        mgotoeditnote.setOnClickListener(this);
-
-        mcontentofnotedetail.setText(data.getStringExtra("content"));
-        mtitleofnotedetail.setText(data.getStringExtra("title"));
+            if (noteDetailContainer != null) {
+                noteDetailContainer.setBackgroundColor(
+                        ContextCompat.getColor(this, COLOR_RESOURCES[colorIndex])
+                );
+            }
+        } catch (Exception e) {
+            handleError(e, "Failed to set background color");
+        }
     }
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.gotoeditnote) {
-            Intent intent = new Intent(notedetails.this, editnoteactivity.class);
-            intent.putExtra("title", data.getStringExtra("title"));
-            intent.putExtra("content", data.getStringExtra("content"));
-            intent.putExtra("noteid", data.getStringExtra("noteid"));
-            startActivity(intent);
+        try {
+            if (v.getId() == R.id.gotoeditnote) {
+                if (data == null) {
+                    throw new IllegalStateException("No intent data available");
+                }
+
+                Intent intent = new Intent(this, editnoteactivity.class);
+                intent.putExtra("title", data.getStringExtra("title"));
+                intent.putExtra("content", data.getStringExtra("content"));
+                intent.putExtra("noteid", data.getStringExtra("noteid"));
+                intent.putExtra("colorIndex", data.getIntExtra("colorIndex", 0));
+                startActivity(intent);
+            }
+        } catch (Exception e) {
+            handleError(e, "Failed to handle click");
         }
     }
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(item.getItemId() == android.R.id.home){
-            Intent intent=new Intent(notedetails.this, notes_page.class);
-            startActivity(intent);
-            finish();
-            return true;
+        try {
+            if (item.getItemId() == android.R.id.home) {
+                onBackPressed();
+                return true;
+            }
+        } catch (Exception e) {
+            handleError(e, "Failed to handle options");
         }
         return super.onOptionsItemSelected(item);
     }
+
+    @Override
+    public void onBackPressed() {
+        try {
+            super.onBackPressed();
+            // finish();
+        } catch (Exception e) {
+            handleError(e, "Failed to handle back press");
+        }
+    }
+
+    private void handleError(Exception e, String userMessage) {
+        try {
+            Log.e(TAG, userMessage + ": " + e.getMessage(), e);
+            showToast(userMessage);
+        } catch (Exception logEx) {
+            Log.e(TAG, "Error handling error: " + logEx.getMessage());
+        }
+    }
+
+    private void showToast(String message) {
+        try {
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        } catch (Exception e) {
+            Log.e(TAG, "Failed to show toast: " + e.getMessage());
+        }
+    }
+
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        View view = getCurrentFocus();
-        if (view != null) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+        try {
+            View view = getCurrentFocus();
+            if (view != null && (ev.getAction() == MotionEvent.ACTION_UP || ev.getAction() == MotionEvent.ACTION_MOVE)) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+                if (imm != null) {
+                    imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+                }
+            }
+        } catch (Exception e) {
+            handleError(e, "Failed to handle touch");
         }
         return super.dispatchTouchEvent(ev);
     }

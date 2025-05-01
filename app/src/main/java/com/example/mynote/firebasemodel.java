@@ -8,6 +8,7 @@ import com.google.firebase.Timestamp;
         private String title;
         private String content;
         private Timestamp editTime;
+        private int colorIndex;
 
         public firebasemodel() { }
 
@@ -20,6 +21,14 @@ import com.google.firebase.Timestamp;
         public String getTitle() {
             return title;
         }
+
+     public int getColorIndex() {
+         return colorIndex;
+     }
+
+     public void setColorIndex(int colorIndex) {
+         this.colorIndex = colorIndex;
+     }
 
         public void setTitle(String title) {
             this.title = title;

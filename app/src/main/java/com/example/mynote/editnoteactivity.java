@@ -31,6 +31,7 @@ public class editnoteactivity extends AppCompatActivity implements View.OnClickL
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
     private FirebaseUser firebaseUser;
+    private int originalColorIndex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +45,8 @@ public class editnoteactivity extends AppCompatActivity implements View.OnClickL
             msaveeditnote = findViewById(R.id.saveeditnote);
 
             data = getIntent();
+            originalColorIndex = data.getIntExtra("colorIndex", 0);
+
             if (!data.hasExtra("title") || !data.hasExtra("content") || !data.hasExtra("noteid")) {
                 Log.w(TAG, "Missing intent extras");
                 showToast("Invalid note data");
@@ -116,10 +119,12 @@ public class editnoteactivity extends AppCompatActivity implements View.OnClickL
                         .document(firebaseUser.getUid())
                         .collection("myNotes")
                         .document(noteId);
+
                 HashMap<String, Object> note = new HashMap<>();
                 note.put("title", newtitle);
                 note.put("content", newcontent);
                 note.put("editTime", FieldValue.serverTimestamp());
+                note.put("colorIndex", originalColorIndex); // Preserve original color
 
                 Log.i(TAG, "Attempting to update note: " + noteId);
                 documentReference.set(note)

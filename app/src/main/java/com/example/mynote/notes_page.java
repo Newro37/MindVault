@@ -33,9 +33,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 public class notes_page extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "NotesPageActivity";
@@ -46,6 +43,20 @@ public class notes_page extends AppCompatActivity implements View.OnClickListene
     private RecyclerView mrecyclerview;
     private StaggeredGridLayoutManager staggeredGridLayoutManager;
     private FirestoreRecyclerAdapter<firebasemodel, NoteViewHolder> noteAdapter;
+
+    // Predefined color resources array
+    private final int[] colorCodes = {
+            R.color.color1,
+            R.color.color2,
+            R.color.color3,
+            R.color.color4,
+            R.color.color5,
+            R.color.color6,
+            R.color.color7,
+            R.color.color8,
+            R.color.color9,
+            R.color.color10
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,8 +104,10 @@ public class notes_page extends AppCompatActivity implements View.OnClickListene
                     try {
                         ImageView popupbutton = holder.itemView.findViewById(R.id.menupopbutton);
 
-                        int colorcode = getRandomColor();
-                        holder.mnote.setBackgroundColor(holder.itemView.getResources().getColor(colorcode, null));
+                        // Get stored color index and set background
+                        int colorIndex = model.getColorIndex();
+                        int colorCode = getFixedColor(colorIndex);
+                        holder.mnote.setBackgroundColor(holder.itemView.getResources().getColor(colorCode, null));
 
                         holder.notetitle.setText(model.getTitle());
                         holder.notecontent.setText(model.getContent());
@@ -110,12 +123,12 @@ public class notes_page extends AppCompatActivity implements View.OnClickListene
                                     intent.putExtra("title", model.getTitle());
                                     intent.putExtra("content", model.getContent());
                                     intent.putExtra("noteid", docId);
+                                    intent.putExtra("colorIndex", colorIndex); // Pass color index
                                     v.getContext().startActivity(intent);
                                     return true;
                                 });
                                 popupmenu.getMenu().add("Share").setOnMenuItemClickListener(item -> {
                                     shareNote(model.getTitle(), model.getContent());
-                                    showToast("Note shared successfully");
                                     return true;
                                 });
                                 popupmenu.getMenu().add("Delete").setOnMenuItemClickListener(item -> {
@@ -152,6 +165,7 @@ public class notes_page extends AppCompatActivity implements View.OnClickListene
                                 intent.putExtra("title", model.getTitle());
                                 intent.putExtra("content", model.getContent());
                                 intent.putExtra("noteid", docId);
+                                intent.putExtra("colorIndex", colorIndex); // Pass color to details
                                 startActivity(intent);
                             } catch (Exception e) {
                                 handleError(e, "Error opening note details");
@@ -185,6 +199,14 @@ public class notes_page extends AppCompatActivity implements View.OnClickListene
         } catch (Exception e) {
             handleError(e, "Failed to initialize activity");
         }
+    }
+
+    private int getFixedColor(int colorIndex) {
+        // Validate color index and return corresponding color
+        if (colorIndex < 0 || colorIndex >= colorCodes.length) {
+            return colorCodes[0]; // Default to first color if invalid
+        }
+        return colorCodes[colorIndex];
     }
 
     @Override
@@ -267,29 +289,6 @@ public class notes_page extends AppCompatActivity implements View.OnClickListene
             }
         } catch (Exception e) {
             handleError(e, "Error stopping Firestore adapter");
-        }
-    }
-
-    private int getRandomColor() {
-        try {
-            List<Integer> colorcode = new ArrayList<>();
-            colorcode.add(R.color.color1);
-            colorcode.add(R.color.color2);
-            colorcode.add(R.color.color3);
-            colorcode.add(R.color.color4);
-            colorcode.add(R.color.color5);
-            colorcode.add(R.color.color6);
-            colorcode.add(R.color.color7);
-            colorcode.add(R.color.color8);
-            colorcode.add(R.color.color9);
-            colorcode.add(R.color.color10);
-
-            Random random = new Random();
-            int number = random.nextInt(colorcode.size());
-            return colorcode.get(number);
-        } catch (Exception e) {
-            Log.e(TAG, "Error getting random color: " + e.getMessage(), e);
-            return R.color.color1; // Fallback color
         }
     }
 

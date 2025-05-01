@@ -10,18 +10,17 @@
     <color name="teal_200">#03DAC5</color>
 
 
-    <color name="color1">#cdc9c3</color>
-    <color name="color2">#c6ebc9</color>
-    <color name="color3">#cfffa5</color>
-    <color name="color4">#a7c5eb</color>
-    <color name="color5">#f3e6e3</color>
-    <color name="color6">#efbbcf</color>
-    <color name="color7">#d6b0b1</color>
-    <color name="color8">#ccf6c8</color>
-    <color name="color9">#ffe0ac</color>
-    <color name="color10">#e5cfe5</color>
-
-
+    <!-- colors.xml -->
+    <color name="color1">#FFE5E5</color>  <!-- Blush Pink -->
+    <color name="color2">#E5FFE8</color>  <!-- Mint Green -->
+    <color name="color3">#E5F2FF</color>  <!-- Sky Blue -->
+    <color name="color4">#FFF7E5</color>  <!-- Warm Vanilla -->
+    <color name="color5">#F0E5FF</color>  <!-- Lavender -->
+    <color name="color6">#E5FFFB</color>  <!-- Ice Blue -->
+    <color name="color7">#FFF0E5</color>  <!-- Peach -->
+    <color name="color8">#EDFFE5</color>  <!-- Lime Frost -->
+    <color name="color9">#FFE5F7</color>  <!-- Cotton Candy -->
+    <color name="color10">#E5FFD6</color> <!-- Pistachio -->
 
 
 </resources>
