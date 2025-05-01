@@ -136,7 +136,7 @@ public class notedetails extends AppCompatActivity implements View.OnClickListen
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         try {
             if (item.getItemId() == android.R.id.home) {
-                onBackPressed();
+                navigateToNotesPage();
                 return true;
             }
         } catch (Exception e) {
@@ -145,7 +145,17 @@ public class notedetails extends AppCompatActivity implements View.OnClickListen
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
+    private void navigateToNotesPage() {
+        try {
+            Intent intent = new Intent(this, notes_page.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        } catch (Exception e) {
+            handleError(e, "Failed to navigate to notes page");
+        }
+    }
+
+   /* @Override
     public void onBackPressed() {
         try {
             super.onBackPressed();
@@ -153,7 +163,7 @@ public class notedetails extends AppCompatActivity implements View.OnClickListen
         } catch (Exception e) {
             handleError(e, "Failed to handle back press");
         }
-    }
+    }*/
 
     private void handleError(Exception e, String userMessage) {
         try {
