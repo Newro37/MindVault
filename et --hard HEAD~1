@@ -1,0 +1,14 @@
+[33m63df19f[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m After adding Profile option and the details option
+[33m1498a5d[m[33m ([m[1;31morigin/master[m[33m)[m Final commit after all brilliant works.
+[33m2d172fa[m adding toast on previous
+[33m726b3a6[m adding toast on previous
+[33mc1842b2[m adding toast on previous
+[33m3fa0387[m adding toast on previous
+[33m9a71d26[m adding toast on previous
+[33md24a67d[m After adding share option by writing share method in notes_page.java and adding popupmenu of share
+[33mbdc9595[m After adding dispatchTouchEvent in create_note.java,editnoteactivity.java,forgotpassword.java,mainactivity.java,notedetails.java,signup.java  and also removed background color in createnote.xml,editnote.xml s content
+[33meb4e340[m After adding show password text view in signup and signin
+[33mb696d5f[m After completing the tutorial withowt doing nothing extra
+[33m0aca8e7[m restore break function in switch statement
+[33m6b14172[m Delete Break function in default switch statement
+[33m7470d93[m Initial commit

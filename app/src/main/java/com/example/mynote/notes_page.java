@@ -1,9 +1,11 @@
 package com.example.mynote;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -11,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
@@ -25,9 +28,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
@@ -238,6 +245,17 @@ public class notes_page extends AppCompatActivity implements View.OnClickListene
     public boolean onCreateOptionsMenu(Menu menu) {
         try {
             getMenuInflater().inflate(R.menu.menu, menu);
+
+            MenuItem emailHeader = menu.findItem(R.id.menu_email_header);
+            if (emailHeader != null && firebaseUser != null && firebaseUser.getEmail() != null) {
+                emailHeader.setTitle(firebaseUser.getEmail());
+                emailHeader.setEnabled(false);
+                emailHeader.setCheckable(false);
+            } else if (emailHeader != null) {
+                emailHeader.setTitle("User Not Logged In");
+                emailHeader.setEnabled(false);
+                emailHeader.setCheckable(false);
+            }
             return true;
         } catch (Exception e) {
             handleError(e, "Error creating options menu");
@@ -247,8 +265,11 @@ public class notes_page extends AppCompatActivity implements View.OnClickListene
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.logout) {
-            try {
+        try {
+            int itemId = item.getItemId();
+            if (itemId == R.id.menu_email_header) {
+                return true;
+            } else if (itemId == R.id.logout) {
                 new AlertDialog.Builder(this)
                         .setTitle("Logout")
                         .setMessage("Do you really want to logout?")
@@ -259,12 +280,240 @@ public class notes_page extends AppCompatActivity implements View.OnClickListene
                         })
                         .setNegativeButton("No", null)
                         .show();
-            } catch (Exception e) {
-                handleError(e, "Error during logout");
+                return true;
+            } else if (itemId == R.id.change_password) {
+                handleChangePassword();
+                return true;
+            } else if (itemId == R.id.delete_account) {
+                handleDeleteAccount();
+                return true;
             }
+        } catch (Exception e) {
+            handleError(e, "Error handling options menu item selected");
         }
         return super.onOptionsItemSelected(item);
     }
+
+    private void handleChangePassword() {
+        if (firebaseUser == null || firebaseUser.getEmail() == null) {
+            showToast("User not logged in or email not available.");
+            navigateToMainActivity();
+            return;
+        }
+
+        // Step 1: Prompt for old password
+        AlertDialog.Builder oldPasswordBuilder = new AlertDialog.Builder(this);
+        oldPasswordBuilder.setTitle("Confirm Current Password");
+
+        final EditText oldPasswordInput = new EditText(this);
+        oldPasswordInput.setHint("Enter Current Password");
+        oldPasswordInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        oldPasswordBuilder.setView(oldPasswordInput);
+
+        oldPasswordBuilder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String oldPassword = oldPasswordInput.getText().toString().trim();
+                if (oldPassword.isEmpty()) {
+                    showToast("Current password cannot be empty.");
+                    return;
+                }
+
+                // Reauthenticate user
+                AuthCredential credential = EmailAuthProvider.getCredential(firebaseUser.getEmail(), oldPassword);
+                firebaseUser.reauthenticate(credential)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Log.d(TAG, "User re-authenticated successfully.");
+                                    // Step 2: Prompt for new password
+                                    promptForNewPassword();
+                                } else {
+                                    String errorMessage = task.getException() != null ? task.getException().getMessage() : "Unknown error";
+                                    Log.e(TAG, "Reauthentication failed: " + errorMessage);
+                                    showToast("Incorrect old password or reauthentication failed: " + errorMessage);
+                                    if (errorMessage != null && errorMessage.contains("REQUIRES_RECENT_LOGIN")) {
+                                        showToast("Please log in again to change password.");
+                                        firebaseAuth.signOut();
+                                        navigateToMainActivity();
+                                    }
+                                }
+                            }
+                        });
+            }
+        });
+        oldPasswordBuilder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+        oldPasswordBuilder.show();
+    }
+
+    private void promptForNewPassword() {
+        AlertDialog.Builder newPasswordBuilder = new AlertDialog.Builder(this);
+        newPasswordBuilder.setTitle("Enter New Password");
+
+        final EditText newPasswordInput = new EditText(this);
+        newPasswordInput.setHint("Enter New Password");
+        newPasswordInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+
+        final EditText confirmPasswordInput = new EditText(this);
+        confirmPasswordInput.setHint("Confirm New Password");
+        confirmPasswordInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+
+        LinearLayout layout = new LinearLayout(this);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setPadding(50, 20, 50, 20);
+        layout.addView(newPasswordInput);
+        layout.addView(confirmPasswordInput);
+        newPasswordBuilder.setView(layout);
+
+        newPasswordBuilder.setPositiveButton("Change", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String newPassword = newPasswordInput.getText().toString().trim();
+                String confirmPassword = confirmPasswordInput.getText().toString().trim();
+
+                if (newPassword.isEmpty() || confirmPassword.isEmpty()) {
+                    showToast("Password fields cannot be empty.");
+                    return;
+                }
+                if (!newPassword.equals(confirmPassword)) {
+                    showToast("Passwords do not match.");
+                    return;
+                }
+                if (newPassword.length() < 6) {
+                    showToast("Password must be at least 6 characters long.");
+                    return;
+                }
+
+                firebaseUser.updatePassword(newPassword)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Log.d(TAG, "User password updated.");
+                                    showToast("Password changed successfully.");
+                                } else {
+                                    String errorMessage = task.getException() != null ? task.getException().getMessage() : "Unknown error";
+                                    Log.e(TAG, "Error changing password: " + errorMessage);
+                                    showToast("Failed to change password: " + errorMessage);
+                                    if (errorMessage != null && errorMessage.contains("REQUIRES_RECENT_LOGIN")) {
+                                        showToast("Please log in again. Session expired.");
+                                        firebaseAuth.signOut();
+                                        navigateToMainActivity();
+                                    }
+                                }
+                            }
+                        });
+            }
+        });
+        newPasswordBuilder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+        newPasswordBuilder.show();
+    }
+
+
+    private void handleDeleteAccount() {
+        if (firebaseUser == null || firebaseUser.getEmail() == null) {
+            showToast("User not logged in or email not available.");
+            navigateToMainActivity();
+            return;
+        }
+
+        // First Confirmation: "Do you really want to delete your account?"
+        new AlertDialog.Builder(this)
+                .setTitle("Delete Account")
+                .setMessage("Do you really want to delete your account?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // If confirmed, then proceed to password confirmation
+                        promptForPasswordAndExecuteDeletion();
+                    }
+                })
+                .setNegativeButton("No", null)
+                .show();
+    }
+
+    private void promptForPasswordAndExecuteDeletion() {
+        AlertDialog.Builder passwordConfirmBuilder = new AlertDialog.Builder(this);
+        passwordConfirmBuilder.setTitle("Confirm Current Password");
+        passwordConfirmBuilder.setMessage("Please enter your current password to confirm account deletion.");
+
+        final EditText currentPasswordInput = new EditText(this);
+        currentPasswordInput.setHint("Current Password");
+        currentPasswordInput.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        passwordConfirmBuilder.setView(currentPasswordInput);
+
+        passwordConfirmBuilder.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                String currentPassword = currentPasswordInput.getText().toString().trim();
+                if (currentPassword.isEmpty()) {
+                    showToast("Password cannot be empty.");
+                    return;
+                }
+
+                AuthCredential credential = EmailAuthProvider.getCredential(firebaseUser.getEmail(), currentPassword);
+                firebaseUser.reauthenticate(credential)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Log.d(TAG, "User re-authenticated for deletion successfully.");
+                                    // Final step: Execute deletion after successful re-authentication
+                                    executeAccountDeletion();
+                                } else {
+                                    String errorMessage = task.getException() != null ? task.getException().getMessage() : "Unknown error";
+                                    Log.e(TAG, "Reauthentication failed for deletion: " + errorMessage);
+                                    showToast("Incorrect password or reauthentication failed: " + errorMessage);
+                                    if (errorMessage != null && errorMessage.contains("REQUIRES_RECENT_LOGIN")) {
+                                        showToast("Please log in again to delete your account. Session expired.");
+                                        firebaseAuth.signOut();
+                                        navigateToMainActivity();
+                                    }
+                                }
+                            }
+                        });
+            }
+        });
+        passwordConfirmBuilder.setNegativeButton("Cancel", (dialog, which) -> dialog.cancel());
+        passwordConfirmBuilder.show();
+    }
+
+    private void executeAccountDeletion() {
+        new AlertDialog.Builder(this)
+                .setTitle("Final Confirmation")
+                .setMessage("Are you absolutely sure? This action cannot be undone and all your notes will be lost permanently.")
+                .setPositiveButton("Yes, Delete Permanently", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        firebaseUser.delete()
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Log.d(TAG, "User account and associated data deleted.");
+                                            // Optional: Also delete user-specific data from Firestore here if stored under their UID
+                                            showToast("Account and all notes deleted successfully.");
+                                            navigateToMainActivity();
+                                        } else {
+                                            String errorMessage = task.getException() != null ? task.getException().getMessage() : "Unknown error";
+                                            Log.e(TAG, "Failed to delete account: " + errorMessage);
+                                            showToast("Failed to delete account: " + errorMessage);
+                                            // Fallback for REQUIRES_RECENT_LOGIN if it somehow occurs after reauthentication
+                                            if (errorMessage != null && errorMessage.contains("REQUIRES_RECENT_LOGIN")) {
+                                                showToast("Please log in again. Session expired.");
+                                                firebaseAuth.signOut();
+                                                navigateToMainActivity();
+                                            }
+                                        }
+                                    }
+                                });
+                    }
+                })
+                .setNegativeButton("No, Cancel", null)
+                .show();
+    }
+
 
     @Override
     protected void onStart() {
@@ -308,7 +557,7 @@ public class notes_page extends AppCompatActivity implements View.OnClickListene
     private void navigateToMainActivity() {
         try {
             Intent intent = new Intent(this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
             finish();
         } catch (Exception e) {

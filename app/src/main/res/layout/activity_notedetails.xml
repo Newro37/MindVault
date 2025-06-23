@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:layout_marginTop="30dp"
-        android:background="?attr/colorPrimary"
+        android:background="@color/colorPrimary"
         android:paddingTop="5dp"
         />
 
@@ -55,7 +55,7 @@
         android:layout_marginBottom="15dp"
         android:contentDescription="edit_note_desc"
         android:src="@drawable/baseline_edit_24"
-        app:backgroundTint="@color/colorPrimaryDark"
+        app:backgroundTint="@color/colorPrimary"
         app:borderWidth="0dp"
         app:elevation="6dp"
         app:rippleColor="@color/colorAccent"/>
