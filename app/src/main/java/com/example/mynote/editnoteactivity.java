@@ -18,14 +18,17 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task; // Import Task
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.DocumentSnapshot; // Import DocumentSnapshot
 
 import java.util.HashMap;
+import java.util.Map; // Import Map
 
 public class editnoteactivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "EditNoteActivity";
@@ -134,14 +137,14 @@ public class editnoteactivity extends AppCompatActivity implements View.OnClickL
                         .collection("myNotes")
                         .document(noteId);
 
-                HashMap<String, Object> note = new HashMap<>();
-                note.put("title", newtitle);
-                note.put("content", newcontent);
-                note.put("editTime", FieldValue.serverTimestamp());
-                note.put("colorIndex", originalColorIndex);
+                Map<String, Object> updates = new HashMap<>(); // Use Map instead of HashMap directly for putAll
+                updates.put("title", newtitle);
+                updates.put("content", newcontent);
+                updates.put("editTime", FieldValue.serverTimestamp());
+                updates.put("colorIndex", originalColorIndex);
 
                 Log.i(TAG, "Attempting to update note: " + noteId);
-                documentReference.set(note)
+                documentReference.update(updates) // Changed from .set() to .update()
                         .addOnSuccessListener(unused -> {
                             Log.i(TAG, "Note updated successfully");
                             showToast("Note updated successfully");

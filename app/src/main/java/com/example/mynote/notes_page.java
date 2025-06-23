@@ -41,6 +41,9 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
+import java.text.SimpleDateFormat;
+import java.util.Locale; // Import for SimpleDateFormat Locale
+
 public class notes_page extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "NotesPageActivity";
     private FloatingActionButton mcreatesnotefab;
@@ -125,6 +128,7 @@ public class notes_page extends AppCompatActivity implements View.OnClickListene
                             try {
                                 PopupMenu popupmenu = new PopupMenu(v.getContext(), v);
                                 popupmenu.setGravity(Gravity.END);
+                                // Reordered options as requested
                                 popupmenu.getMenu().add("Edit").setOnMenuItemClickListener(item -> {
                                     Intent intent = new Intent(v.getContext(), editnoteactivity.class);
                                     intent.putExtra("title", model.getTitle());
@@ -132,6 +136,10 @@ public class notes_page extends AppCompatActivity implements View.OnClickListene
                                     intent.putExtra("noteid", docId);
                                     intent.putExtra("colorIndex", colorIndex); // Pass color index
                                     v.getContext().startActivity(intent);
+                                    return true;
+                                });
+                                popupmenu.getMenu().add("Details").setOnMenuItemClickListener(item -> {
+                                    showNoteDetails(model);
                                     return true;
                                 });
                                 popupmenu.getMenu().add("Share").setOnMenuItemClickListener(item -> {
@@ -160,6 +168,8 @@ public class notes_page extends AppCompatActivity implements View.OnClickListene
                                             .show();
                                     return true;
                                 });
+                                // "Add" option removed as requested
+
                                 popupmenu.show();
                             } catch (Exception e) {
                                 handleError(e, "Error showing popup menu");
@@ -222,7 +232,8 @@ public class notes_page extends AppCompatActivity implements View.OnClickListene
             try {
                 Intent intent = new Intent(this, create_note.class);
                 startActivity(intent);
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 handleError(e, "Error opening create note activity");
             }
         }
@@ -572,5 +583,36 @@ public class notes_page extends AppCompatActivity implements View.OnClickListene
     private void handleError(Exception e, String userMessage) {
         Log.e(TAG, userMessage + ": " + e.getMessage(), e);
         showToast(userMessage);
+    }
+
+    // This method was missing and has been re-added.
+    private void showNoteDetails(firebasemodel model) {
+        String title = model.getTitle();
+
+        // Format Last Edited Time
+        long lastEditedTimestamp = model.getEditTime() != null ? model.getEditTime().toDate().getTime() : 0;
+        String lastEditedTime = "N/A";
+        if (lastEditedTimestamp > 0) {
+            SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy HH:mm:ss", Locale.getDefault());
+            lastEditedTime = sdf.format(model.getEditTime().toDate());
+        }
+
+        // Format Creation Time
+        long createdTimestamp = model.getCreationTime() != null ? model.getCreationTime().toDate().getTime() : 0;
+        String createdTime = "N/A";
+        if (createdTimestamp > 0) {
+            SimpleDateFormat sdf = new SimpleDateFormat("MMM dd, yyyy HH:mm:ss", Locale.getDefault());
+            createdTime = sdf.format(model.getCreationTime().toDate());
+        }
+
+        String details = "Title: " + title + "\n\n" +
+                "Created Time: " + createdTime + "\n" +
+                "Last Edited Time: " + lastEditedTime;
+
+        new AlertDialog.Builder(this)
+                .setTitle("Note Details")
+                .setMessage(details)
+                .setPositiveButton("OK", null)
+                .show();
     }
 }

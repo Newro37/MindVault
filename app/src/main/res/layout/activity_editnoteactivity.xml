@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:layout_marginTop="30dp"
-        android:background="@color/colorPrimary"
+        android:background="@color/color3"
         android:paddingTop="5dp" />
 
 

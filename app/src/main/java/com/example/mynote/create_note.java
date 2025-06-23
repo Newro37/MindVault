@@ -115,6 +115,7 @@ public class create_note extends AppCompatActivity implements View.OnClickListen
                 note.put("title", title);
                 note.put("content", content);
                 note.put("editTime", FieldValue.serverTimestamp());
+                note.put("creationTime", FieldValue.serverTimestamp()); // Added creationTime
                 note.put("colorIndex", colorIndex);
 
                 Log.i(TAG, "Attempting to save note: " + title);
