@@ -12,7 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:layout_marginTop="30dp"
-        android:background="@color/color3"
         android:paddingTop="5dp" />
 
 
@@ -21,32 +20,26 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/toolbarofeditnote"
-        android:layout_marginTop="20dp"
-        android:background="@color/white"
+        android:layout_marginTop="7dp"
         android:importantForAutofill="yes"
         android:inputType="textCapSentences"
         android:minHeight="48dp"
-        android:textColor="@android:color/black"
-        android:textColorHint="@android:color/black"
         android:textSize="25sp"
         android:textStyle="bold"
-        android:paddingLeft="8dp"/>
+        android:paddingLeft="10dp"/>
 
 
     <EditText
         android:id="@+id/editcontentofnote"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@id/edittitleofnote"
-        android:layout_marginTop="10dp"
-        android:background="@color/ic_launcher_background"
+        android:layout_marginTop="7dp"
         android:gravity="top|start"
         android:importantForAutofill="yes"
         android:inputType="textMultiLine"
         android:minHeight="48dp"
-        android:paddingLeft="8dp"
-        android:textColor="@android:color/black"
-        android:textColorHint="@android:color/black"
+        android:paddingLeft="10dp"
         android:textSize="20sp" />
 
 

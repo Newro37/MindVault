@@ -14,7 +14,6 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:layout_marginTop="30dp"
-        android:background="@color/color3"
         android:paddingTop="5dp" />
 
 
@@ -23,14 +22,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/toolbarofcreatenote"
-        android:layout_marginTop="20dp"
-        android:background="@android:color/white"
+        android:layout_marginTop="7dp"
         android:hint="Title"
         android:importantForAutofill="yes"
         android:inputType="textCapSentences"
         android:minHeight="48dp"
-        android:textColor="@android:color/black"
-        android:textColorHint="@android:color/black"
+        android:paddingLeft="10dp"
         android:textSize="25sp"
         android:textStyle="bold" />
 
@@ -38,18 +35,16 @@
     <EditText
         android:id="@+id/createcontentofnote"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_below="@id/createtitleofnote"
-        android:layout_marginTop="10dp"
-        android:background="@color/ic_launcher_background"
+        android:layout_marginTop="7dp"
         android:gravity="top|start"
         android:hint="Note"
         android:importantForAutofill="yes"
         android:inputType="textMultiLine"
-        android:minHeight="48dp"
-        android:padding="5dp"
-        android:textColor="@android:color/black"
-        android:textColorHint="@android:color/black"
+        android:minHeight="1dp"
+        android:paddingLeft="10dp"
+
         android:textSize="20sp" />
 
 

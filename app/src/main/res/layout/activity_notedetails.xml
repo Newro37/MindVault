@@ -5,14 +5,16 @@
     android:id="@+id/noteDetailContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginTop="30dp"
+
     tools:context=".notedetails">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarofnotedetail"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:layout_marginTop="30dp"
-        android:background="@color/colorPrimary"
+
+
         android:paddingTop="5dp"
         />
 
@@ -21,9 +23,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/toolbarofnotedetail"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="7dp"
         android:minHeight="48dp"
-        android:paddingLeft="6dp"
+        android:paddingLeft="10dp"
         android:textColor="@android:color/black"
         android:textSize="25sp"
         android:textStyle="bold"
@@ -35,10 +37,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/titleofnotedetail"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="7dp"
         android:gravity="top|start"
         android:minHeight="48dp"
-        android:padding="5dp"
         android:paddingLeft="10dp"
         android:textColor="@android:color/black"
         android:textSize="20sp"
