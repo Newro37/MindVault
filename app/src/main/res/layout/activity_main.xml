@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -9,14 +10,12 @@
     android:padding="24dp"
     tools:context=".MainActivity">
 
-    <!-- Logo Image -->
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="160dp"
         android:layout_gravity="center"
         android:src="@drawable/icon"/>
 
-    <!-- Welcome Text -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -42,7 +41,6 @@
             android:textStyle="bold"/>
     </LinearLayout>
 
-    <!-- Tagline -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -52,7 +50,6 @@
         android:textColor="#7A7A7A"
         android:textSize="16sp"/>
 
-    <!-- Email Input -->
     <EditText
         android:id="@+id/loginemailid"
         android:layout_width="match_parent"
@@ -64,7 +61,6 @@
         android:textColor="#000000"
         android:textColorHint="#7A7A7A"/>
 
-    <!-- Password Input -->
     <EditText
         android:id="@+id/loginpasswordid"
         android:layout_width="match_parent"
@@ -76,7 +72,6 @@
         android:textColor="#000000"
         android:textColorHint="#7A7A7A"/>
 
-    <!-- Show Password Checkbox -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -100,7 +95,6 @@
             android:textSize="14sp"/>
     </LinearLayout>
 
-    <!-- Login Button -->
     <Button
         android:id="@+id/loginloginid"
         android:layout_width="match_parent"
@@ -112,7 +106,6 @@
         android:textSize="18sp"
         android:textStyle="bold"/>
 
-    <!-- Forgot Password -->
     <TextView
         android:id="@+id/loginforgotpasswordid"
         android:layout_width="wrap_content"
@@ -123,7 +116,6 @@
         android:textColor="#FFC107"
         android:textSize="16sp"/>
 
-    <!-- Register Prompt -->
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -148,7 +140,6 @@
             android:textSize="14sp"/>
     </LinearLayout>
 
-    <!-- Progress Bar -->
     <ProgressBar
         android:id="@+id/loginprogressid"
         android:layout_width="wrap_content"

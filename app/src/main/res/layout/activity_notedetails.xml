@@ -1,57 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/noteDetailContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_marginTop="30dp"
-
     tools:context=".notedetails">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarofnotedetail"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-
-
-        android:paddingTop="5dp"
-        />
-
-    <TextView
-        android:id="@+id/titleofnotedetail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/toolbarofnotedetail"
-        android:layout_marginTop="7dp"
-        android:minHeight="48dp"
-        android:paddingLeft="10dp"
-        android:textColor="@android:color/black"
-        android:textSize="25sp"
-        android:textStyle="bold"
-        android:contentDescription="Note title"
-        tools:text="Sample Title"/>
-
-    <TextView
-        android:id="@+id/contentofnotedetail"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/titleofnotedetail"
-        android:layout_marginTop="7dp"
-        android:gravity="top|start"
-        android:minHeight="48dp"
-        android:paddingLeft="10dp"
-        android:textColor="@android:color/black"
-        android:textSize="20sp"
-        android:contentDescription="Note content"
-        tools:text="Sample Content"/>
+        android:paddingTop="5dp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/gotoeditnote"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
         android:layout_marginEnd="15dp"
         android:layout_marginBottom="15dp"
         android:contentDescription="edit_note_desc"
@@ -59,6 +28,47 @@
         app:backgroundTint="@color/colorPrimary"
         app:borderWidth="0dp"
         app:elevation="6dp"
-        app:rippleColor="@color/colorAccent"/>
+        app:rippleColor="@color/colorAccent" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbarofnotedetail"
+        android:layout_above="@id/gotoeditnote"
+        android:fillViewport="true"
+        android:paddingBottom="10dp"> <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/titleofnotedetail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
+            android:minHeight="48dp"
+            android:paddingLeft="10dp"
+            android:textColor="@android:color/black"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:contentDescription="Note title"
+            android:background="@null"
+            tools:text="Sample Title" />
+
+        <TextView
+            android:id="@+id/contentofnotedetail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
+            android:gravity="top|start"
+            android:minHeight="48dp"
+            android:paddingLeft="10dp"
+            android:textColor="@android:color/black"
+            android:background="@null"
+            android:textSize="20sp"
+            android:contentDescription="Note content"
+            tools:text="Sample Content" />
+    </LinearLayout>
+    </ScrollView>
 
 </RelativeLayout>

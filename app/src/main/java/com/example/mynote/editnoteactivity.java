@@ -87,7 +87,7 @@ public class editnoteactivity extends AppCompatActivity implements View.OnClickL
             medittitleofnote.setText(notetitle);
             meditcontentofnote.setText(notecontent);
 
-            // ✅ Back button handling using OnBackPressedDispatcher
+            //Back button handling
             getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
                 @Override
                 public void handleOnBackPressed() {
