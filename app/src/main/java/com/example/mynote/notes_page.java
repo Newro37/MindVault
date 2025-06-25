@@ -133,6 +133,8 @@ public class notes_page extends AppCompatActivity implements View.OnClickListene
                                     intent.putExtra("content", model.getContent());
                                     intent.putExtra("noteid", docId);
                                     intent.putExtra("colorIndex", colorIndex); // Pass color index
+                                    // Pass lastEditTime to edit activity
+                                    intent.putExtra("lastEditTime", model.getEditTime() != null ? model.getEditTime().toDate().getTime() : 0);
                                     v.getContext().startActivity(intent);
                                     return true;
                                 });
@@ -180,6 +182,8 @@ public class notes_page extends AppCompatActivity implements View.OnClickListene
                                 intent.putExtra("content", model.getContent());
                                 intent.putExtra("noteid", docId);
                                 intent.putExtra("colorIndex", colorIndex); // Pass color to details
+                                // Pass lastEditTime to notedetails activity
+                                intent.putExtra("lastEditTime", model.getEditTime() != null ? model.getEditTime().toDate().getTime() : 0);
                                 startActivity(intent);
                             } catch (Exception e) {
                                 handleError(e, "Error opening note details");
