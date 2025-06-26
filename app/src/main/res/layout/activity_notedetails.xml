@@ -22,10 +22,10 @@
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
         android:layout_marginStart="15dp"
-        android:layout_marginBottom="25dp"
+        android:layout_marginBottom="45dp"
         android:textColor="@android:color/black"
         android:textSize="14sp"
-        android:textStyle="italic"
+        android:textStyle="italic|bold"
         tools:text="Last Modified: 2023-10-27 10:30 AM" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -34,8 +34,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="15dp"
-        android:layout_marginBottom="15dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="30dp"
         android:contentDescription="edit_note_desc"
         android:src="@drawable/baseline_edit_24"
         app:backgroundTint="@color/colorPrimary"
