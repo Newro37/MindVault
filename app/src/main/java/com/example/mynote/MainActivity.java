@@ -41,7 +41,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Log.d(TAG, "MainActivity initialized");
         } catch (Exception e) {
             handleError(e, "Failed to initialize activity");
-            finish(); // Close activity if initialization fails
+            finish();
         }
     }
 

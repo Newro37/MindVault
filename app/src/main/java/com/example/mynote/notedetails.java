@@ -16,10 +16,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class notedetails extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "NoteDetailsActivity";
-    private TextView mtitleofnotedetail, mcontentofnotedetail;
+    private TextView mtitleofnotedetail, mcontentofnotedetail, mlastModifiedDate;
     private FloatingActionButton mgotoeditnote;
     private Intent data;
     private RelativeLayout noteDetailContainer;
@@ -54,6 +57,7 @@ public class notedetails extends AppCompatActivity implements View.OnClickListen
             mtitleofnotedetail = findViewById(R.id.titleofnotedetail);
             mcontentofnotedetail = findViewById(R.id.contentofnotedetail);
             mgotoeditnote = findViewById(R.id.gotoeditnote);
+            mlastModifiedDate = findViewById(R.id.lastModifiedDate);
 
             if (getSupportActionBar() != null) {
                 getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -67,12 +71,22 @@ public class notedetails extends AppCompatActivity implements View.OnClickListen
 
             String title = data.getStringExtra("title");
             String content = data.getStringExtra("content");
+            long lastEditTime = data.getLongExtra("lastEditTime", 0);
 
             if (mtitleofnotedetail != null) {
                 mtitleofnotedetail.setText(title != null ? title : "");
             }
             if (mcontentofnotedetail != null) {
                 mcontentofnotedetail.setText(content != null ? content : "");
+            }
+
+            // Set last modified date and time
+            if (mlastModifiedDate != null && lastEditTime > 0) {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()); // Reverted format
+                String formattedDate = sdf.format(new Date(lastEditTime));
+                mlastModifiedDate.setText("Last Modified: " + formattedDate);
+            } else if (mlastModifiedDate != null) {
+                mlastModifiedDate.setText("Last Modified: N/A");
             }
 
             int colorIndex = data.getIntExtra("colorIndex", 0);
@@ -122,6 +136,7 @@ public class notedetails extends AppCompatActivity implements View.OnClickListen
                 intent.putExtra("content", data.getStringExtra("content"));
                 intent.putExtra("noteid", data.getStringExtra("noteid"));
                 intent.putExtra("colorIndex", data.getIntExtra("colorIndex", 0));
+                intent.putExtra("lastEditTime", data.getLongExtra("lastEditTime", 0));
                 startActivity(intent);
             }
         } catch (Exception e) {

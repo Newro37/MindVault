@@ -1,21 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:padding="5dp"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-    
+    android:layout_height="180dp"
+    android:padding="2dp" >
+
     <androidx.cardview.widget.CardView
+        android:id="@+id/notecard"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:elevation="50dp"
-        app:cardCornerRadius="5dp"
-        android:id="@+id/notecard">
+        app:cardCornerRadius="5dp">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:id="@+id/note"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <LinearLayout
@@ -25,7 +26,7 @@
 
                 <TextView
                     android:id="@+id/notetitle"
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:paddingLeft="10dp"
@@ -35,9 +36,9 @@
                     android:text="It's title"
                     android:textColor="@color/black"
                     android:textSize="20sp"
-                    android:textStyle="bold">
-
-                </TextView>
+                    android:textStyle="bold"
+                    android:maxLines="2"
+                    android:ellipsize="end" />
 
                 <ImageView
                     android:id="@+id/menupopbutton"
@@ -49,25 +50,22 @@
                     android:src="@drawable/baseline_more_vert_24"
                     android:contentDescription="menu_options"/>
 
-
-
             </LinearLayout>
 
-
             <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:id="@+id/notecontent"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:paddingLeft="10dp"
                 android:paddingTop="10dp"
                 android:paddingRight="10dp"
-                android:paddingBottom="20dp"
+                android:paddingBottom="10dp"
                 android:text="Text is here"
                 android:textSize="15sp"
                 android:textColor="@color/black"
-                android:layout_weight="0"
-                android:paddingLeft="10dp">
-
-            </TextView>
+                android:maxLines="6"
+                android:ellipsize="end" />
 
         </LinearLayout>
 

@@ -26,9 +26,7 @@
         android:background="@color/colorPrimary"
         app:titleTextColor="@color/black"
         android:paddingStart="16dp"
-        android:paddingEnd="16dp"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
+        android:paddingEnd="16dp">
 
     </androidx.appcompat.widget.Toolbar>
 

@@ -54,7 +54,6 @@ public class notes_page extends AppCompatActivity implements View.OnClickListene
     private StaggeredGridLayoutManager staggeredGridLayoutManager;
     private FirestoreRecyclerAdapter<firebasemodel, NoteViewHolder> noteAdapter;
 
-    // Predefined color resources array
     private final int[] colorCodes = {
             R.color.color1,
             R.color.color2,
@@ -114,7 +113,6 @@ public class notes_page extends AppCompatActivity implements View.OnClickListene
                     try {
                         ImageView popupbutton = holder.itemView.findViewById(R.id.menupopbutton);
 
-                        // Get stored color index and set background
                         int colorIndex = model.getColorIndex();
                         int colorCode = getFixedColor(colorIndex);
                         holder.mnote.setBackgroundColor(holder.itemView.getResources().getColor(colorCode, null));
@@ -128,13 +126,15 @@ public class notes_page extends AppCompatActivity implements View.OnClickListene
                             try {
                                 PopupMenu popupmenu = new PopupMenu(v.getContext(), v);
                                 popupmenu.setGravity(Gravity.END);
-                                // Reordered options as requested
+
                                 popupmenu.getMenu().add("Edit").setOnMenuItemClickListener(item -> {
                                     Intent intent = new Intent(v.getContext(), editnoteactivity.class);
                                     intent.putExtra("title", model.getTitle());
                                     intent.putExtra("content", model.getContent());
                                     intent.putExtra("noteid", docId);
                                     intent.putExtra("colorIndex", colorIndex); // Pass color index
+                                    // Pass lastEditTime to edit activity
+                                    intent.putExtra("lastEditTime", model.getEditTime() != null ? model.getEditTime().toDate().getTime() : 0);
                                     v.getContext().startActivity(intent);
                                     return true;
                                 });
@@ -168,7 +168,6 @@ public class notes_page extends AppCompatActivity implements View.OnClickListene
                                             .show();
                                     return true;
                                 });
-                                // "Add" option removed as requested
 
                                 popupmenu.show();
                             } catch (Exception e) {
@@ -183,6 +182,8 @@ public class notes_page extends AppCompatActivity implements View.OnClickListene
                                 intent.putExtra("content", model.getContent());
                                 intent.putExtra("noteid", docId);
                                 intent.putExtra("colorIndex", colorIndex); // Pass color to details
+                                // Pass lastEditTime to notedetails activity
+                                intent.putExtra("lastEditTime", model.getEditTime() != null ? model.getEditTime().toDate().getTime() : 0);
                                 startActivity(intent);
                             } catch (Exception e) {
                                 handleError(e, "Error opening note details");
@@ -219,9 +220,8 @@ public class notes_page extends AppCompatActivity implements View.OnClickListene
     }
 
     private int getFixedColor(int colorIndex) {
-        // Validate color index and return corresponding color
         if (colorIndex < 0 || colorIndex >= colorCodes.length) {
-            return colorCodes[0]; // Default to first color if invalid
+            return colorCodes[0];
         }
         return colorCodes[colorIndex];
     }
@@ -312,7 +312,6 @@ public class notes_page extends AppCompatActivity implements View.OnClickListene
             return;
         }
 
-        // Step 1: Prompt for old password
         AlertDialog.Builder oldPasswordBuilder = new AlertDialog.Builder(this);
         oldPasswordBuilder.setTitle("Confirm Current Password");
 
@@ -330,7 +329,6 @@ public class notes_page extends AppCompatActivity implements View.OnClickListene
                     return;
                 }
 
-                // Reauthenticate user
                 AuthCredential credential = EmailAuthProvider.getCredential(firebaseUser.getEmail(), oldPassword);
                 firebaseUser.reauthenticate(credential)
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -338,7 +336,6 @@ public class notes_page extends AppCompatActivity implements View.OnClickListene
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
                                     Log.d(TAG, "User re-authenticated successfully.");
-                                    // Step 2: Prompt for new password
                                     promptForNewPassword();
                                 } else {
                                     String errorMessage = task.getException() != null ? task.getException().getMessage() : "Unknown error";
@@ -429,14 +426,12 @@ public class notes_page extends AppCompatActivity implements View.OnClickListene
             return;
         }
 
-        // First Confirmation: "Do you really want to delete your account?"
         new AlertDialog.Builder(this)
                 .setTitle("Delete Account")
                 .setMessage("Do you really want to delete your account?")
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        // If confirmed, then proceed to password confirmation
                         promptForPasswordAndExecuteDeletion();
                     }
                 })
@@ -470,7 +465,6 @@ public class notes_page extends AppCompatActivity implements View.OnClickListene
                             public void onComplete(@NonNull Task<Void> task) {
                                 if (task.isSuccessful()) {
                                     Log.d(TAG, "User re-authenticated for deletion successfully.");
-                                    // Final step: Execute deletion after successful re-authentication
                                     executeAccountDeletion();
                                 } else {
                                     String errorMessage = task.getException() != null ? task.getException().getMessage() : "Unknown error";
@@ -503,14 +497,12 @@ public class notes_page extends AppCompatActivity implements View.OnClickListene
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
                                             Log.d(TAG, "User account and associated data deleted.");
-                                            // Optional: Also delete user-specific data from Firestore here if stored under their UID
                                             showToast("Account and all notes deleted successfully.");
                                             navigateToMainActivity();
                                         } else {
                                             String errorMessage = task.getException() != null ? task.getException().getMessage() : "Unknown error";
                                             Log.e(TAG, "Failed to delete account: " + errorMessage);
                                             showToast("Failed to delete account: " + errorMessage);
-                                            // Fallback for REQUIRES_RECENT_LOGIN if it somehow occurs after reauthentication
                                             if (errorMessage != null && errorMessage.contains("REQUIRES_RECENT_LOGIN")) {
                                                 showToast("Please log in again. Session expired.");
                                                 firebaseAuth.signOut();
@@ -585,11 +577,9 @@ public class notes_page extends AppCompatActivity implements View.OnClickListene
         showToast(userMessage);
     }
 
-    // This method was missing and has been re-added.
     private void showNoteDetails(firebasemodel model) {
         String title = model.getTitle();
 
-        // Format Last Edited Time
         long lastEditedTimestamp = model.getEditTime() != null ? model.getEditTime().toDate().getTime() : 0;
         String lastEditedTime = "N/A";
         if (lastEditedTimestamp > 0) {
@@ -597,7 +587,6 @@ public class notes_page extends AppCompatActivity implements View.OnClickListene
             lastEditedTime = sdf.format(model.getEditTime().toDate());
         }
 
-        // Format Creation Time
         long createdTimestamp = model.getCreationTime() != null ? model.getCreationTime().toDate().getTime() : 0;
         String createdTime = "N/A";
         if (createdTimestamp > 0) {

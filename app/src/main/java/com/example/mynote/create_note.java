@@ -68,7 +68,7 @@ public class create_note extends AppCompatActivity implements View.OnClickListen
 
             msavenote.setOnClickListener(this);
 
-            // ✅ Modern back press handling
+            // Back press handling
             getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
                 @Override
                 public void handleOnBackPressed() {

@@ -8,7 +8,7 @@ public class firebasemodel {
     private String title;
     private String content;
     private Timestamp editTime;
-    private Timestamp creationTime; // Added new field for creation time
+    private Timestamp creationTime;
     private int colorIndex;
 
     public firebasemodel() { }
@@ -17,7 +17,6 @@ public class firebasemodel {
         this.title = title;
         this.content = content;
         this.editTime = editTime;
-        // creationTime is not set in this constructor, assuming it's handled separately
     }
 
     public String getTitle() {
@@ -52,7 +51,6 @@ public class firebasemodel {
         this.editTime = editTime;
     }
 
-    // Getter and Setter for creationTime
     public Timestamp getCreationTime() {
         return creationTime;
     }

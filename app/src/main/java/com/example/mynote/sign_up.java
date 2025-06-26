@@ -29,7 +29,6 @@ public class sign_up extends AppCompatActivity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
 
-        // Initialize views
         mSignUpEmail = findViewById(R.id.signupemail);
         mSignUpPassword = findViewById(R.id.signuppassword);
         mConfirmPassword = findViewById(R.id.confirmpassword);
@@ -40,13 +39,11 @@ public class sign_up extends AppCompatActivity implements View.OnClickListener {
         mProgressBar = findViewById(R.id.signupprogressbar);
         mPasswordError = findViewById(R.id.passwordError);
 
-        // Set click listeners
         mSignUpButton.setOnClickListener(this);
         mLoginPrompt.setOnClickListener(this);
         mShowPasswordCheckbox.setOnClickListener(this);
         mShowPasswordText.setOnClickListener(this);
 
-        // Initialize Firebase Auth
         mFirebaseAuth = FirebaseAuth.getInstance();
     }
 
@@ -68,7 +65,6 @@ public class sign_up extends AppCompatActivity implements View.OnClickListener {
         String password = mSignUpPassword.getText().toString().trim();
         String confirmPassword = mConfirmPassword.getText().toString().trim();
 
-        // Validate inputs
         if (email.isEmpty()) {
             mSignUpEmail.setError("Email is required");
             mSignUpEmail.requestFocus();
@@ -101,11 +97,9 @@ public class sign_up extends AppCompatActivity implements View.OnClickListener {
             return;
         }
 
-        // Show progress bar and disable button
         mProgressBar.setVisibility(View.VISIBLE);
         mSignUpButton.setEnabled(false);
 
-        // Create user with Firebase
         mFirebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     mProgressBar.setVisibility(View.GONE);
@@ -143,7 +137,6 @@ public class sign_up extends AppCompatActivity implements View.OnClickListener {
             mSignUpPassword.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD);
             mConfirmPassword.setInputType(android.text.InputType.TYPE_CLASS_TEXT | android.text.InputType.TYPE_TEXT_VARIATION_PASSWORD);
         }
-        // Move cursor to the end of the text
         mSignUpPassword.setSelection(mSignUpPassword.getText().length());
         mConfirmPassword.setSelection(mConfirmPassword.getText().length());
     }
